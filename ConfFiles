@@ -1,0 +1,33 @@
+-The conf files of ansible by default are in /etc/ansible/ansible.cfg where we can
+see the route of the inventory, log files, modules, time to wait for an ssh attempt,
+how many hosts ansible can target at the same time, enable plugins....
+
+--Overide default parameters. Sometimes we have multiple playbooks but we don't want to run the same conf files
+  for all of them, for example we want an extented time for ssh on some of the playbooks,
+  for that we need to copy the conf file and added into the playbook directory and modify it.
+  Another way to do it, in case we want one conf file to be used wih different playbooks
+is to pass the conf file as an environment variable like:
+  $ANSIBLE_CONFIG=/opt/ansible-web.cfg ansible-playbook playbook.yml
+
+  If we have both ways configured, the first one to take will be the environment variable,
+  those override any other files, followed by the file in the current directory,then the
+  one in the users home directory (.ansible.cfg) and then the one in the default location
+
+  - We can also make use of the default conf file but only override one parameter, for example
+    gathering = explicit, we just add ansible and put it in upper case (however check the
+    documentation to be sure). ANSIBLE_GATHERING=explicit.
+so to apply it to just one execution or playbook:
+  ANSIBLE_GATHERING=explicit ansible-playbook playbook.yml
+If we want to persist this change on the shell session:
+  export ANSIBLE_GATHERING=explicit
+  ansible-playbook playbook.yml
+
+To make the change persistent across all the shells and users:
+  create a copy of the conf in the playbooks directory and update the parameter
+
+-To see all configuration.
+ansible-config list
+-To see which one is active (current config file)
+ansible-config view
+-Show the current settings Ansible has picked up
+ansible-config dump

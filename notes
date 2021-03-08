@@ -1,0 +1,12 @@
+-Run ansible playbook
+ansible-playbook test.yml
+
+-Check the OS distribution version of the localhost using ansible
+ansible -m setup localhost | grep distribution_version
+
+-Identify the OS distribution of the web1 host using ansible facts. Using the inventory file given
+in /home/thor/playbooks/web Inventory file (web1 ansible_host=172.20.1.100 ansible_ssh_pass=Passw0rd ansible_user=root)
+
+ansible -i inventory -m setup web1 | grep distribution
+
+
