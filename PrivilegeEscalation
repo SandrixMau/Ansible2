@@ -1,0 +1,19 @@
+Privilege escalation is the rights that a user has on the nodes.
+In order for a user to escalate those privileges it needs to become super user,
+so it can use sudo, but also this can be done using pfexec, doas, ksu, runas.
+It can also become another user like for example 'su anotheruser'.
+
+In ansible to become sudo add this to the playbook or to the inventory file or in the ansible.cfg:
+# become: yes
+
+If we want to use another method just add:
+#become_method: doas
+or
+#become_user: anotheruser
+
+If variables present in all the files the inventory file overrides the variables in the config file,
+the ones in the playbook overrides the ones in the inventory file, if pass on the command line those
+overrides everything else.
+
+to be prompted for sudo password on command line add:
+# --ask-become-pass
