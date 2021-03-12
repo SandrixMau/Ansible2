@@ -1,0 +1,52 @@
+Using an Ansible playbook install firewalld on web1 node, start and enable its service as well. Name the playbook as firewall.yml and keep it under ~/playbooks.
+
+---
+- hosts: web1
+  tasks:
+   - yum: name=firewalld state=installed
+   - service: name=firewalld state=started
+
+We have a requirement on web1 node to white list web2 node's IP address 172.20.1.101 in firewall. Create and run a playbook ~/playbooks/whitelist.yml to do so.
+Add IP in internal zone.
+
+- hosts: web1
+  tasks:
+   - firewalld:
+      source: 172.20.1.101
+      state: enabled
+      zone: internal
+      permanent: yes
+      immediate: yes
+
+We want to block 161/udp port on web1 node permanently. Make a playbook block.yml under ~/playbooks/ directory to do so.
+Use zone: block
+
+---
+- hosts: web1
+  tasks:
+    - firewalld:
+        port: 161/udp
+        zone: block
+        permanent: yes
+        immediate: yes
+        state: enabled
+
+On web1 node add firewall rule in internal zone to enable https connection from Ansible controller machine and make sure
+that rule must persist even after system reboot. You can create a playbook https.yml under ~/playbooks/ directory.
+IP address of ansible controller is 172.20.1.2.
+
+---
+- hosts: web1
+  tasks:
+    - name: Enable HTTPS for ansible controller
+      firewalld:
+        source: 172.20.1.2
+        service: https
+        zone: internal
+        state: enabled
+        permanent: yes
+
+    - service:
+        name: firewalld
+        state: reloaded
+

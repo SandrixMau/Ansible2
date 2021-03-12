@@ -1,0 +1,73 @@
+Create a playbook httpd.yml under ~/playbooks directory to make sure httpd service is started on web1 node.
+
+---
+- name: Start httpd
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Start httpd service
+      service:
+        name: httpd
+        state: started
+        enabled: true
+
+We have a playbook ~/playbooks/file.yml to copy a file with a welcome message under httpd server root on web1 node.
+Make changes in playbook so that httpd server reloads after copying the file, make sure it does not restart the httpd server.
+---
+- hosts: all
+  gather_facts: no
+  tasks:
+    - name: Copy Apache welcome file
+      copy:
+        src: index.html
+        dest: /var/www/html/index.html
+    - service:
+        name: httpd
+        state: reloaded
+
+We would like the httpd service on web1 node to always start automatically after system reboot. Update the httpd.yml playbook you created earlier with the required changes.
+---
+- name: Start httpd
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Start httpd service
+      service:
+        name: httpd
+        state: started
+        enabled: true
+
+We created a playbook ~/playbooks/config.yml to enable port 443 for httpd on web1 node as we do want to run nginx on default port 80 so port 80 needs to be free.
+Make changes in playbook so that httpd service restarts after making change.
+
+---
+- hosts: all
+  gather_facts: no
+  tasks:
+    - name: Make changes in Apache config
+      replace:
+        path: /etc/httpd/conf/httpd.conf
+        regexp: "^Listen 80"
+        replace: "Listen 443"
+
+    - name: Restart Apache
+      service:
+        name: httpd
+        state: restarted
+
+Create a playbook ~/playbooks/nginx.yml to install nginx on web1 node and make sure nginx service is started and should always start even after system reboot.
+
+---
+- hosts: all
+  gather_facts: no
+  tasks:
+    - name: Install nginx
+      yum:
+        name: nginx
+        state: present
+
+    - name: Start and enable Nginx
+      service:
+        name: nginx
+        state: started
+        enabled: yes
