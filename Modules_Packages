@@ -32,3 +32,17 @@ add task in same playbook to do so.
   tasks:
   - yum: name=sudo state=latest
   - yum: name=vsftpd-2.2.2 state=present allow_downgrade=yes
+
+Install more than 1 package
+
+- name: Deploy lamp stack application
+  hosts: all
+  become: yes
+  tasks:
+    - name: Install common dependencies
+      yum:
+        name:
+          - libselinux-python
+          - libsemanage-python
+          - firewalld
+        state: installed
