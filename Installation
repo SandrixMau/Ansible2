@@ -1,0 +1,30 @@
+-Ansible control machine can only be a Linux machine not a Windows one, there are some
+workarounds for it but are not officially supported. However Windows machines can
+be targeted by Ansible.
+-To install ansible on ubuntu apt-get install ansible on centOs yum install ansible
+If python is alredy installed use  pip install ansible.
+For the exam is on centOs and for not to get conflict with the versions we should install
+it with pip, for that we should:
+yum install epel-release
+yum install python-pip
+pip install ansible
+
+To just upgrade ansible:
+pip install --upgrade ansible
+
+Install specific version of Ansible:
+pip install ansible==2.4
+
+DISTRIBUTE SSH KEYS
+
+-SSH to manage nodes, so we generate keys:
+ssh-keygen
+add public key on the remote server under:
+cat /home/.ssh/authorized_keys
+access remote:
+ssh -i id_rsa user@server
+Or we can copy the key:
+ssh-copy-id -i id-ras user@server
+
+-To test connectivity to the managed nodes
+Use the ping module to test connectivity through Ansible - ansible -m ping -i inventory web1
