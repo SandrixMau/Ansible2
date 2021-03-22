@@ -1,0 +1,22 @@
+-Print the hostname of all managed nodes in the inventory file ~/playbooks/inventory:
+
+# ansible all -a "hostname" -i inventory
+
+Use the copy module to copy /etc/resolv.conf to /tmp/resolv.conf on node00 in the inventory file ~/playbooks/inventory:
+
+# ansible node00 -m copy -a "src=/etc/resolv.conf dest=/tmp/resolv.conf" -i inventory
+
+Export ANSIBLE_GATHERING, set to explicit:
+# export ANSIBLE_GATHERING=False
+
+Run an ad-hoc command to print the uptime of all managed nodes in the inventory file ~/playbooks/inventory:
+# ansible all -m shell -a uptime -i inventory
+
+Create and run a playbook ~/playbooks/playbook.yml to cat the file /etc/redhat-release on all managed nodes in the inventory file ~/playbooks/inventory.
+Also please make sure to run this playbook in verbose mode i.e just add -vv at the end of your ansible-playbook command:
+#ansible-playbook -i inventory playbook.yml -vv
+
+---
+- hosts: all
+  tasks:
+    - shell: cat /etc/redhat-release

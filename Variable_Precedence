@@ -1,0 +1,39 @@
+Variable Precedence
+
+ansible_host will be an variable, and it can be defined in different places
+within our hosts file. the dns_server variable is applicable to all hosts
+:
+
+/etc/ansible/hosts
+
+web1 ansible_host=172.20.1.100
+web2 ansible_host=172.20.1.101
+
+[web_servers]
+web1
+web2
+
+[web_servers:vars]
+dns_server=10.33.1.1
+
+If we specify the dns for a particular hosts, ansible takes the variable at the host level first, if none it will take the one at the group level,
+so in this case web2 will take dns_server=10.33.1.3 and web1 dns_server=10.33.1.1. So that's what is called variable precedence, host level takes precedence
+over the variable defined over the group level:
+
+/etc/ansible/hosts
+
+web1 ansible_host=172.20.1.100
+web2 ansible_host=172.20.1.101 dns_server=10.33.1.3
+
+[web_servers]
+web1
+web2
+
+[web_servers:vars]
+dns_server=10.33.1.1
+
+If in the playbook we have a different value for the dns_server, this one overrides the variable in the host and group level.
+
+we can even run an extra variable when running the playbook, this case takes the highest precedence:
+
+ansible-playbook myplay.yml --extra-vars "dns_server=10.33.1.4"

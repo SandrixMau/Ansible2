@@ -1,0 +1,26 @@
+Instead of creating a yaml file we can just pass the details in a command. So for example
+we want to test connectivity to hosts via Ansible, a yaml file will look like:
+
+---
+- name: Ping servers
+  hosts: all
+  tasks:
+  - ping:
+
+And run the file (please note this will not perform a ping, it will test if ansible is able to ssh to the servers).
+- So we can use the module ping:
+
+# ansible -m ping all
+
+Or add the command directly:
+
+# ansible -a 'cat /etc/hosts' all
+
+-Gather facts of localhost:
+# ansible -m setup localhost
+
+-Run an adhoc command to perform a ping connectivity to all hosts in the /home/thor/playbooks/inventory file:
+# ansible -m ping -i /home/thor/playbooks/inventory all
+
+-Run an adhoc command to run a command on host web1 to print the date:
+# ansible -m command -a date -i inventory web1
